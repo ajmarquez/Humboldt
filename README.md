@@ -25,4 +25,4 @@ La información puede ser vista en vivo en:
 
 http://hackadabra.com/humboldt/terraV11.html  (Version 11: Mapa en B&W y puntos de colores)
 
-http://hackadabra.com/humboldt/terraV11.html  (Version 10: Mapa en color y puntos de colores)
+http://hackadabra.com/humboldt/terraV10.html  (Version 10: Mapa en color y puntos de colores)
