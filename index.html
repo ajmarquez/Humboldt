@@ -1,0 +1,119 @@
+<!DOCTYPE html >
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Humboldt [Modulo Human]</title>
+     <!-- Bootstrap core CSS -->
+    <link href="dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="jumbotron.css" rel="stylesheet">
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLleYPwRGqnYBJeQCbFhhwskMqlogyKgQ&sensor=false"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var customIcons = {
+      alert: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+      },
+      quiet: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+      }
+    };
+
+    function load() {
+      //Inicia variables del mapa
+      var map = new google.maps.Map(document.getElementById("map"), {
+        center: new google.maps.LatLng(10.20748, -67.99567),
+        zoom: 16,
+        mapTypeId: 'roadmap',
+        styles: [{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}]
+      });
+      var infoWindow = new google.maps.InfoWindow;
+
+      // carga hoja XML Terra
+       downloadUrl("terra.php", function(data) {
+        var xml = data.responseXML;
+        var markers = xml.documentElement.getElementsByTagName("marker");
+        for (var i = 0; i < markers.length; i++) {
+          var name = markers[i].getAttribute("name");
+          var address = markers[i].getAttribute("address");
+          var speed = markers[i].getAttribute("speed");
+          var type = markers[i].getAttribute("type");
+          var point = new google.maps.LatLng(
+              parseFloat(markers[i].getAttribute("lat")),
+              parseFloat(markers[i].getAttribute("lng")));
+          var html = "<h3>" + type + "</h3><b>" + "Coordenadas:" + "</b>" + point + "<br><b>" + "Velocidad:" + "</b>" + speed;
+          var icon = customIcons[type] || {};
+          var marker = new google.maps.Marker({
+            map: map,
+            position: point,
+            animation: google.maps.Animation.DROP,  //Solo acepta BOUNCE y DROP. Son opcionales
+            icon: icon.icon  //Define como se colocan los iconos. Si se comenta se coloca el icono default
+          });
+          bindInfoWindow(marker, map, infoWindow, html);
+        }
+      });
+    }
+
+    function bindInfoWindow(marker, map, infoWindow, html) {
+      google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.setContent(html);
+        infoWindow.open(map, marker);
+      });
+    }
+
+    function downloadUrl(url, callback) {
+      var request = window.ActiveXObject ?
+          new ActiveXObject('Microsoft.XMLHTTP') :
+          new XMLHttpRequest;
+
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+          request.onreadystatechange = doNothing;
+          callback(request, request.status);
+        }
+      };
+
+      request.open('GET', url, true);
+      request.send(null);
+    }
+
+    function doNothing() {}
+
+    //]]>
+
+  </script>
+
+  </head>
+
+  <body onload="load()">
+
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          
+          <a class="navbar-brand" href="#">Humboldt</a>
+        </div>
+        
+       
+        <ul class="nav navbar-nav navbar-right">
+            <li><a>Modulo human</a></li>
+          </ul>
+      </div>
+    </div>
+    
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+
+    <div id="map" style=" display: block; margin-left: auto; margin-top: 50px; margin-right: auto; width: auto; height: 768px;"></div>
+
+
+      <footer>
+        <p>&copy; Creado por AJMarquez</p>
+      </footer>
+    </div> <!-- /container -->
+
+  </body>
+
+</html>
